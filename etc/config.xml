@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <cache_warmer_crawler>
+            <general>
+                <default_concurrency xsi:type="number">1</default_concurrency>
+                <varnish_uri xsi:nil="true"/>
+                <storage_dir xsi:type="string">cache_warmer_crawler</storage_dir>
+            </general>
+        </cache_warmer_crawler>
+    </default>
+</config>

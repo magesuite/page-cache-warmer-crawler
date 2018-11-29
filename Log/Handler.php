@@ -4,12 +4,12 @@ namespace MageSuite\PageCacheWarmerCrawler\Log;
 
 class Handler extends \Magento\Framework\Logger\Handler\Base
 {
-    const LOG_FORMAT = "[%datetime%] %channel%.%level_name%: %message% %context% %extra%\n";
+    const LOG_FORMAT = "[%datetime%] %level_name%: %message% %context% %extra%\n";
 
     /**
      * @var string
      */
-    protected $fileName = '/var/log/warmup-crawler.log';
+    protected $fileName = '/var/log/cache_warmer_crawler.log';
 
     /**
      * @var int
