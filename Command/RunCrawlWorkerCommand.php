@@ -2,7 +2,9 @@
 
 namespace MageSuite\PageCacheWarmerCrawler\Command;
 
+use Psr\Log\LogLevel;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class RunCrawlWorkerCommand extends \Symfony\Component\Console\Command\Command
 {
@@ -60,7 +62,16 @@ class RunCrawlWorkerCommand extends \Symfony\Component\Console\Command\Command
          * We cannot create this logger in di.xml because we need the OutputInterface for this. */
         return new \MageSuite\PageCacheWarmerCrawler\Log\GroupLogger([
             $this->logger,
-            new \Symfony\Component\Console\Logger\ConsoleLogger($output)
+            new \Symfony\Component\Console\Logger\ConsoleLogger($output, [
+                LogLevel::EMERGENCY => OutputInterface::VERBOSITY_NORMAL,
+                LogLevel::ALERT     => OutputInterface::VERBOSITY_NORMAL,
+                LogLevel::CRITICAL  => OutputInterface::VERBOSITY_NORMAL,
+                LogLevel::ERROR     => OutputInterface::VERBOSITY_NORMAL,
+                LogLevel::WARNING   => OutputInterface::VERBOSITY_NORMAL,
+                LogLevel::NOTICE    => OutputInterface::VERBOSITY_NORMAL,
+                LogLevel::INFO      => OutputInterface::VERBOSITY_VERBOSE,
+                LogLevel::DEBUG     => OutputInterface::VERBOSITY_VERY_VERBOSE,
+            ])
         ]);
     }
 
@@ -73,18 +84,19 @@ class RunCrawlWorkerCommand extends \Symfony\Component\Console\Command\Command
         ];
     }
 
-    private function resolveSettings(\Symfony\Component\Console\Input\InputInterface $input): array
-    {
+    private function resolveSettings(
+        \Symfony\Component\Console\Input\InputInterface $input
+    ): array {
         return array_merge($this->getDefaultSettings(), [
             'max_jobs' => intval($input->getOption('max-jobs')),
             'concurrency' => intval($input->getOption('concurrency')),
-            'varnish-uri' => $input->getOption('varnish-uri'),
-            'batch-size' => intval($input->getOption('batch-size')),
+            'varnish_uri' => $input->getOption('varnish-uri'),
+            'batch_size' => intval($input->getOption('batch-size')),
             'min_runtime' => floatval($input->getOption('min-runtime')),
             'min_runtime_delay' => floatval($input->getOption('min-runtime-delay')),
-            'log_requests' => $input->hasOption('log-requests'),
-            'warmup-requests-timeout' => intval($input->getOption('warmup-requests-timeout')),
-            'session-requests-timeout' => intval($input->getOption('session-requests-timeout')),
+            'log_requests' => !!$input->getOption('log-requests'),
+            'warmup_requests_timeout' => intval($input->getOption('warmup-requests-timeout')),
+            'session_equests_timeout' => intval($input->getOption('session-requests-timeout')),
         ]);
     }
 
