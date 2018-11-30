@@ -52,6 +52,7 @@ class RunCrawlWorkerCommand extends \Symfony\Component\Console\Command\Command
             ->addOption('log-requests', null, InputOption::VALUE_NONE, 'Whether to log all requests and responses for debugging')
             ->addOption('warmup-requests-timeout', null, InputOption::VALUE_REQUIRED, 'Connection timeout for warmup requests', 60)
             ->addOption('session-requests-timeout', null, InputOption::VALUE_REQUIRED, 'Connection timeout for log in related requests', 30)
+            ->addOption('accept-encoding', null, InputOption::VALUE_REQUIRED, 'Value of Accept-Encoding header for warmup requests', 'gzip, deflate')
         ;
     }
 
@@ -97,6 +98,10 @@ class RunCrawlWorkerCommand extends \Symfony\Component\Console\Command\Command
             'log_requests' => !!$input->getOption('log-requests'),
             'warmup_requests_timeout' => intval($input->getOption('warmup-requests-timeout')),
             'session_equests_timeout' => intval($input->getOption('session-requests-timeout')),
+            'warmup_headers' => [
+                'X-Warmup' => 'yes',
+                'Accept-Encoding' => $input->getOption('accept-encoding')
+            ]
         ]);
     }
 
