@@ -12,6 +12,7 @@ class ConfigurationProvider
     const CONFIG_PATH_DEFAULT_CONCURRENCY = 'cache_warmer_crawler/general/default_concurrency';
     const CONFIG_PATH_VARNISH_URI = 'cache_warmer_crawler/general/varnish_uri';
     const CONFIG_PATH_STORAGE_DIR = 'cache_warmer_crawler/general/storage_dir';
+    const CONFIG_PATH_TARGET_TTFB = 'cache_warmer_crawler/general/default_target_ttfb';
 
     /**
      * @var \Magento\Framework\App\Config\ScopeConfigInterface
@@ -100,6 +101,11 @@ class ConfigurationProvider
     public function getDefaultConcurrency(): int
     {
         return intval($this->scopeConfig->getValue(self::CONFIG_PATH_DEFAULT_CONCURRENCY));
+    }
+
+    public function getDefaultTargetTTFB(): int
+    {
+        return intval($this->scopeConfig->getValue(self::CONFIG_PATH_TARGET_TTFB));
     }
 
 }

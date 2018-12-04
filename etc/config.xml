@@ -6,6 +6,7 @@
                 <default_concurrency>1</default_concurrency>
                 <varnish_uri/>
                 <storage_dir>cache_warmer_crawler</storage_dir>
+                <default_target_ttfb>3</default_target_ttfb>
             </general>
         </cache_warmer_crawler>
     </default>
