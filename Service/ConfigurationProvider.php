@@ -88,12 +88,18 @@ class ConfigurationProvider
 
     public function getVarnishUri(): ?string
     {
-        return $this->scopeConfig->getValue(self::CONFIG_PATH_VARNISH_URI);
+        $value = $this->scopeConfig->getValue(self::CONFIG_PATH_VARNISH_URI);
+
+        if (empty($value)) {
+            return null;
+        }
+
+        return $value;
     }
 
     public function getDefaultConcurrency(): int
     {
-        return $this->scopeConfig->getValue(self::CONFIG_PATH_DEFAULT_CONCURRENCY);
+        return intval($this->scopeConfig->getValue(self::CONFIG_PATH_DEFAULT_CONCURRENCY));
     }
 
 }

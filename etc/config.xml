@@ -3,9 +3,9 @@
     <default>
         <cache_warmer_crawler>
             <general>
-                <default_concurrency xsi:type="number">1</default_concurrency>
-                <varnish_uri xsi:nil="true"/>
-                <storage_dir xsi:type="string">cache_warmer_crawler</storage_dir>
+                <default_concurrency>1</default_concurrency>
+                <varnish_uri/>
+                <storage_dir>cache_warmer_crawler</storage_dir>
             </general>
         </cache_warmer_crawler>
     </default>
