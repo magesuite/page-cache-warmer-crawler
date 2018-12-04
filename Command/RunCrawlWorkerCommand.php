@@ -48,11 +48,14 @@ class RunCrawlWorkerCommand extends \Symfony\Component\Console\Command\Command
             ->addOption('varnish-uri', null, InputOption::VALUE_REQUIRED, 'Directly query varnish at this uri', null)
             ->addOption('batch-size', null, InputOption::VALUE_REQUIRED, 'Size of single job batch', 10)
             ->addOption('min-runtime', null, InputOption::VALUE_REQUIRED, 'Miminum amount of time to stay up (working or waiting for jobs)', 30)
-            ->addOption('min-runtime-delay', null, InputOption::VALUE_REQUIRED, 'Delay between job checks if `min-runtime` is not yet reached and there are no jobs', 10)
+            ->addOption('min-runtime-delay', null, InputOption::VALUE_REQUIRED, 'Delay between job checks if `min-runtime` is not yet reached and there are no jobs', 5)
             ->addOption('log-requests', null, InputOption::VALUE_NONE, 'Whether to log all requests and responses for debugging')
             ->addOption('warmup-requests-timeout', null, InputOption::VALUE_REQUIRED, 'Connection timeout for warmup requests', 60)
             ->addOption('session-requests-timeout', null, InputOption::VALUE_REQUIRED, 'Connection timeout for log in related requests', 30)
             ->addOption('accept-encoding', null, InputOption::VALUE_REQUIRED, 'Value of Accept-Encoding header for warmup requests', 'gzip, deflate')
+            ->addOption('target-ttfb', null, InputOption::VALUE_REQUIRED, 'Target TTFB (in seconds) to keep below or start throttling', 2)
+            ->addOption('disable-throttling', null, InputOption::VALUE_NONE, 'Disable throttling entirely')
+            ->addOption('retry-threshold', null, InputOption::VALUE_REQUIRED, 'How long to wait before retrying unfinished job', '15 minutes')
         ;
     }
 
@@ -63,16 +66,7 @@ class RunCrawlWorkerCommand extends \Symfony\Component\Console\Command\Command
          * We cannot create this logger in di.xml because we need the OutputInterface for this. */
         return new \MageSuite\PageCacheWarmerCrawler\Log\GroupLogger([
             $this->logger,
-            new \Symfony\Component\Console\Logger\ConsoleLogger($output, [
-                LogLevel::EMERGENCY => OutputInterface::VERBOSITY_NORMAL,
-                LogLevel::ALERT     => OutputInterface::VERBOSITY_NORMAL,
-                LogLevel::CRITICAL  => OutputInterface::VERBOSITY_NORMAL,
-                LogLevel::ERROR     => OutputInterface::VERBOSITY_NORMAL,
-                LogLevel::WARNING   => OutputInterface::VERBOSITY_NORMAL,
-                LogLevel::NOTICE    => OutputInterface::VERBOSITY_NORMAL,
-                LogLevel::INFO      => OutputInterface::VERBOSITY_VERBOSE,
-                LogLevel::DEBUG     => OutputInterface::VERBOSITY_VERY_VERBOSE,
-            ])
+            new \MageSuite\PageCacheWarmerCrawler\Log\ConsoleLogger($output)
         ]);
     }
 
@@ -97,7 +91,10 @@ class RunCrawlWorkerCommand extends \Symfony\Component\Console\Command\Command
             'min_runtime_delay' => floatval($input->getOption('min-runtime-delay')),
             'log_requests' => !!$input->getOption('log-requests'),
             'warmup_requests_timeout' => intval($input->getOption('warmup-requests-timeout')),
-            'session_equests_timeout' => intval($input->getOption('session-requests-timeout')),
+            'session_requests_timeout' => intval($input->getOption('session-requests-timeout')),
+            'throttle' => !!$input->getOption('disable-throttling') ? false : [
+                'target_ttfb' => intval($input->getOption('target-ttfb')),
+            ],
             'warmup_headers' => [
                 'X-Warmup' => 'yes',
                 'Accept-Encoding' => $input->getOption('accept-encoding')

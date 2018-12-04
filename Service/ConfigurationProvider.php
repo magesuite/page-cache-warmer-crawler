@@ -2,6 +2,8 @@
 
 namespace MageSuite\PageCacheWarmerCrawler\Service;
 
+use Magento\Framework\Filesystem\DirectoryList;
+
 class ConfigurationProvider
 {
     const CONFIG_PATH_CUSTOMER_PASSWORD = 'cache_warmer/general/password';
@@ -80,7 +82,8 @@ class ConfigurationProvider
 
     public function getSessionStorageDirectory(): string
     {
-        return $this->scopeConfig->getValue(self::CONFIG_PATH_STORAGE_DIR);
+        return $this->directoryList->getPath(\Magento\Framework\App\Filesystem\DirectoryList::VAR_DIR) .
+            '/' . $this->scopeConfig->getValue(self::CONFIG_PATH_STORAGE_DIR);
     }
 
     public function getVarnishUri(): ?string
