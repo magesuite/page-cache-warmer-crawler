@@ -2,8 +2,6 @@
 
 namespace MageSuite\PageCacheWarmerCrawler\Service;
 
-use Magento\Framework\Filesystem\DirectoryList;
-
 class ConfigurationProvider
 {
     const CONFIG_PATH_CUSTOMER_PASSWORD = 'cache_warmer/general/password';

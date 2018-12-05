@@ -44,7 +44,7 @@ class RunCrawlWorkerCommand extends \Symfony\Component\Console\Command\Command
             ->setName('cache:warm:pages-crawl-worker')
             ->setDescription('Executes worker which processes page cache warmup jobs')
             ->addOption('max-jobs', null, InputOption::VALUE_REQUIRED, 'Max number of jobs to be ran before terminating', 100)
-            ->addOption('concurrency', null, InputOption::VALUE_REQUIRED, 'Max number of simulatenous warmup requests')
+            ->addOption('concurrency', null, InputOption::VALUE_REQUIRED, 'Max number of simulatenous warmup requests', null)
             ->addOption('varnish-uri', null, InputOption::VALUE_REQUIRED, 'Directly query varnish at this uri', null)
             ->addOption('batch-size', null, InputOption::VALUE_REQUIRED, 'Size of single job batch', 10)
             ->addOption('min-runtime', null, InputOption::VALUE_REQUIRED, 'Miminum amount of time to stay up (working or waiting for jobs)', 30)
@@ -53,7 +53,7 @@ class RunCrawlWorkerCommand extends \Symfony\Component\Console\Command\Command
             ->addOption('warmup-requests-timeout', null, InputOption::VALUE_REQUIRED, 'Connection timeout for warmup requests', 60)
             ->addOption('session-requests-timeout', null, InputOption::VALUE_REQUIRED, 'Connection timeout for log in related requests', 30)
             ->addOption('accept-encoding', null, InputOption::VALUE_REQUIRED, 'Value of Accept-Encoding header for warmup requests', 'gzip, deflate')
-            ->addOption('target-ttfb', null, InputOption::VALUE_REQUIRED, 'Target TTFB (in seconds) to keep below or start throttling')
+            ->addOption('target-ttfb', null, InputOption::VALUE_REQUIRED, 'Target TTFB (in seconds) to keep below or start throttling', null)
             ->addOption('disable-throttling', null, InputOption::VALUE_NONE, 'Disable throttling entirely')
             ->addOption('retry-threshold', null, InputOption::VALUE_REQUIRED, 'How long to wait before retrying unfinished job', '15 minutes')
         ;
@@ -75,8 +75,8 @@ class RunCrawlWorkerCommand extends \Symfony\Component\Console\Command\Command
     ): array {
         return array_merge([
             'max_jobs' => intval($input->getOption('max-jobs')),
-            'concurrency' => intval($input->getOption('concurrency')),
-            'varnish_uri' => $input->getOption('varnish-uri') ?? $this->configuration->getVarnishUri(),
+            'concurrency' => $input->getOption('concurrency') !== null ? intval($input->getOption('concurrency')) : $this->configuration->getDefaultConcurrency(),
+            'varnish_uri' => $input->getOption('varnish-uri') !== null ? $input->getOption('varnish-uri') : $this->configuration->getVarnishUri(),
             'batch_size' => intval($input->getOption('batch-size')),
             'min_runtime' => floatval($input->getOption('min-runtime')),
             'min_runtime_delay' => floatval($input->getOption('min-runtime-delay')),
@@ -85,7 +85,7 @@ class RunCrawlWorkerCommand extends \Symfony\Component\Console\Command\Command
             'session_requests_timeout' => intval($input->getOption('session-requests-timeout')),
             'session_storage_dir' => $this->configuration->getSessionStorageDirectory(),
             'throttle' => !!$input->getOption('disable-throttling') ? false : [
-                'target_ttfb' => intval($input->getOption('target-ttfb')) ?? $this->configuration->getDefaultTargetTTFB(),
+                'target_ttfb' => $input->getOption('target-ttfb') !== null ? intval($input->getOption('target-ttfb')) : $this->configuration->getDefaultTargetTTFB(),
             ],
             'warmup_headers' => [
                 'X-Warmup' => 'yes',
