@@ -2,6 +2,8 @@
 
 namespace MageSuite\PageCacheWarmerCrawler\Log;
 
+use Magento\Framework\Logger\Monolog;
+
 class Handler extends \Magento\Framework\Logger\Handler\Base
 {
     const LOG_FORMAT = "[%datetime%] %level_name%: %message% %context% %extra%\n";
@@ -25,6 +27,9 @@ class Handler extends \Magento\Framework\Logger\Handler\Base
         ?string $fileName = null
     ) {
         parent::__construct($filesystem, $filePath, $fileName);
+
+        /* Log from info, do not log debug stuff */
+        $this->setLevel(\Monolog\Logger::INFO);
 
         $this->setFormatter(new \Monolog\Formatter\LineFormatter(
             self::LOG_FORMAT,

@@ -81,15 +81,12 @@ class ConsoleLogger extends \Psr\Log\AbstractLogger implements \Psr\Log\LoggerIn
         }
 
         $message = preg_replace_callback_array([
-            '~(:\s\'?)([^,\'$]+)(\'?)~' => function($m) {
+            '~(:\s\"?)([^,\n$]+)(\"?|\n)~' => function($m) {
                 return $m[1] . '<fg=white>' . $m[2] . '</>' . $m[3];
             },
             '~\[[A-Z-_0-9:]+\]~' => function($m) {
                 return '<fg=magenta>' . $m[0] . '</>';
             },
-//            '~(^|\s)([A-Z][\w\d_-]+:\s)~' => function($m) {
-//                return $m[1] . '<options=bold>' . $m[2] . '</>';
-//            }
         ], $message);
 
         $textColor = self::LEVEL_COLOR_MAP[$level];
