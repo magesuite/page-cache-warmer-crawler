@@ -5,7 +5,7 @@
     "require": {
         "php": "~7.1.0",
         "magento/framework": "^101.0.0|^102.0.0",
-        "symfony/console": "~2.8",
+        "symfony/console": "~2.3, !=2.7.0",
         "creativestyle/magesuite-page-cache-warmer": "^1.0.0",
         "creativestyle/magesuite-page-cache-warmer-crawl-worker": "^1.0.0"
     },
