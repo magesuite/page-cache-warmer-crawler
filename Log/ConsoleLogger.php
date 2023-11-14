@@ -32,7 +32,7 @@ class ConsoleLogger extends \Psr\Log\AbstractLogger implements \Psr\Log\LoggerIn
         LogLevel::INFO      => 'blue',
         LogLevel::DEBUG     => 'default',
     ];
-    
+
     /**
      * @var OutputInterface
      */
