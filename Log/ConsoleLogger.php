@@ -44,7 +44,7 @@ class ConsoleLogger extends \Psr\Log\AbstractLogger implements \Psr\Log\LoggerIn
         $this->output = $output;
     }
 
-    public function log($level, $message, array $context = [])
+    public function log($level, $message, array $context = []): void
     {
         $output = $this->output;
 
