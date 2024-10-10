@@ -24,7 +24,7 @@ class GroupLogger extends \Psr\Log\AbstractLogger
     /**
      * {@inheritdoc}
      */
-    public function log($level, $message, array $context = array())
+    public function log($level, $message, array $context = array()): void
     {
         foreach ($this->upstreamLoggers as $upstreamLogger) {
             $upstreamLogger->log($level, $message, $context);
